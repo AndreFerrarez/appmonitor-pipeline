@@ -1,4 +1,5 @@
 # AppMonitor Pipeline
+[![CI Pipeline](https://github.com/AndreFerrarez/appmonitor-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/AndreFerrarez/appmonitor-pipeline/actions/workflows/ci.yml)
 
 Este repositório contém os workflows de CI/CD para o projeto AppMonitor,
 focado em demonstrar as melhores práticas de automação com GitHub Actions.

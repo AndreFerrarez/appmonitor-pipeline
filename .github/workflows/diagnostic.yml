@@ -1,0 +1,46 @@
+name: 🩺 Automated Diagnostics
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-diagnostics:
+    name: Run Environment Diagnostics
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for required variables and secrets
+        run: |
+          # Flag to track if any checks fail
+          FAIL=false
+
+          echo "### 🩺 Relatório de Diagnóstico do Ambiente" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Verificação | Status | Observações |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|---|" >> $GITHUB_STEP_SUMMARY
+
+          # Check for APP_ENV variable
+          if [ -z "${{ vars.APP_ENV }}" ]; then
+            echo "::error::A variável de repositório APP_ENV não está definida."
+            echo "| `APP_ENV` | ❌ Falhou | Variável não encontrada. Defina em Settings > Secrets and variables > Actions. |" >> $GITHUB_STEP_SUMMARY
+            FAIL=true
+          else
+            echo "✅ Variável APP_ENV encontrada."
+            echo "| `APP_ENV` | ✅ OK | Valor: `${{ vars.APP_ENV }}` |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check for API_KEY secret
+          if [ -z "${{ secrets.API_KEY }}" ]; then
+            echo "::error::O segredo API_KEY não está definido."
+            echo "| `API_KEY` | ❌ Falhou | Segredo não encontrado. Defina em Settings > Secrets and variables > Actions. |" >> $GITHUB_STEP_SUMMARY
+            FAIL=true
+          else
+            echo "✅ Segredo API_KEY encontrado."
+            echo "| `API_KEY` | ✅ OK | Segredo está presente. |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Fail the step if any check failed
+          if [ "$FAIL" = true ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Ação necessária:** Corrija os problemas acima para garantir a execução correta dos pipelines." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

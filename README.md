@@ -45,3 +45,17 @@ Um pipeline robusto precisa ser configurável sem expor dados sensíveis. O GitH
 
 * **Propósito:** É uma forma de **utilizar** os `secrets` e `vars` dentro do ambiente de execução do job. É uma variável de ambiente padrão, com escopo limitado ao job ou ao step onde é definida.
 * **Características:** É a "ponte" entre os contextos do GitHub Actions e os scripts ou ferramentas que rodam no pipeline.
+
+---
+
+## Diagnóstico e Monitoramento do Pipeline
+
+### Logs de Debug e Mensagens Personalizadas
+Logs são essenciais para entender o que aconteceu durante a execução de um workflow. Ativando a variável `ACTIONS_STEP_DEBUG: true`, obtemos uma visão detalhada de cada passo. Além disso, podemos usar mensagens especiais para criar anotações que se destacam nos logs:
+- `::warning::{message}`: Gera um aviso em amarelo. Útil para sinalizar problemas que não são críticos.
+- `::error::{message}`: Gera um erro em vermelho. Chama atenção para falhas ou problemas importantes.
+
+### Job Summary
+O Job Summary é um relatório em Markdown gerado ao final de cada execução. Ele nos permite criar um painel customizado com as informações mais importantes (status dos jobs, branch, links para artefatos), facilitando o diagnóstico rápido sem precisar ler todos os logs.
+
+

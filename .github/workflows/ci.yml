@@ -20,10 +20,16 @@ jobs:
   test:
     needs: validate
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_STEP_DEBUG: true
 
     steps:
       - name: Simula execução de testes
-        run: echo "Running tests..." && exit 0
+        run: |
+          echo "::warning::Este é um teste de aviso. O script continuará."
+          echo "Running tests..."
+          echo "::error::Este é um teste de erro simulado. O script continuará, mas o aviso ficará visível."
+          exit 0
 
   package:
     needs: test
@@ -44,3 +50,23 @@ jobs:
         with:
           name: test-report
           path: report.zip
+
+  summary:
+    name: 📖 Workflow Summary
+    needs: [ validate, test, package ]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate dynamic summary
+        run: |
+          echo "### 📝 Resumo do Workflow de CI" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Runner OS:** \`${{ runner.os }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| \`validate\` | ${{ needs.validate.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| \`test\` | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| \`package\` | ${{ needs.package.result }} |" >> $GITHUB_STEP_SUMMARY

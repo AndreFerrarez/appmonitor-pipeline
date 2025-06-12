@@ -1,0 +1,20 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Deploy Job
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://${{ vars.PROD_DOMAIN }}
+
+    steps:
+      - name: Simulate Deploy
+        run: |
+          echo "🚀 Starting deploy to production..."
+          echo "Target domain is: ${{ vars.PROD_DOMAIN }}"
+          echo "✅ Deploy successful!"

@@ -1,0 +1,33 @@
+name: Run Monitor Demonstration
+
+on:
+  workflow_dispatch:
+
+jobs:
+  use_vars_directly:
+    name: 1. Read Variable Directly
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display repository variable
+        run: echo "Application environment is ${{ vars.APP_ENV }}"
+
+  use_vars_in_env:
+    name: 2. Read Variable via Env
+    runs-on: ubuntu-latest
+    env:
+      SUPPORT_CONTACT: ${{ vars.SUPPORT_EMAIL }}
+    steps:
+      - name: Display environment variable
+        run: echo "To get support, contact $SUPPORT_CONTACT"
+
+  use_secrets:
+    name: 3. Use a Secret
+    runs-on: ubuntu-latest
+    steps:
+      - name: Attempt to display a secret
+        env:
+          API_TOKEN: ${{ secrets.API_KEY }}
+        run: |
+          echo "Passing the secret to an external tool or script..."
+          echo "The API Key I received is: $API_TOKEN"
+          echo "Notice above how GitHub automatically masks the secret value with ***"

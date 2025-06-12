@@ -1,0 +1,46 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Validar sintaxe do script
+        run: bash -n status-check.sh
+
+  test:
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Simula execução de testes
+        run: echo "Running tests..." && exit 0
+
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Gera o artefato de relatório
+        run: |
+          echo "Gerando relatório..." > report.txt
+          echo "Data: $(date)" >> report.txt
+          zip report.zip report.txt
+
+      - name: Upload do artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: report.zip
